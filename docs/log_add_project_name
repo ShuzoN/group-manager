@@ -1,0 +1,33 @@
+## 参加団体の「企画名」を入力する機能の追加
+
+### 企画名を追加する経緯
+  総務は, 参加団体から「参加団体名」と「企画名」を聴取し管理している.  
+現状のシステムでは「参加団体名」のみを入力するようになっている. 
+そこで, 今回は「企画名」を入力する機能を追加する.  
+
+### Groupテーブルに企画名(project_name)カラムを追加する
+
+Migrationファイルの追加
+
+```terminal 
+$ bundle exec rails g migration AddColumnToGroup
+```
+
+変更点
+```diff
++class AddColumnToGroup < ActiveRecord::Migration
++  def change
++    add_column    :groups, :project_name, :string, defalut: "未回答"
++  end
++end
+```
+
+### Groupモデルのvalidateを追加
+
+```diff
+# app/models/group.rb
+-  validates :name, presence: true, uniqueness: true
++  validates :name, presence: true, uniqueness: { scope: :fes_year }
++  validates :project_name, presence: true, uniqueness: true, null: false
+```
+ 
