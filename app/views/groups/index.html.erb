@@ -6,6 +6,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:project_name) %></th>
       <th><%= model_class.human_attribute_name(:group_category) %></th>
       <th><%= model_class.human_attribute_name(:activity) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
@@ -16,6 +17,7 @@
     <% @groups.each do |group| %>
       <tr>
         <td><%= group.name %></td>
+        <td><%= group.project_name %></td>
         <td><%= group.group_category.name_ja %></td>
         <td><%= group.activity %></td>
         <td><%=l group.created_at %></td>
