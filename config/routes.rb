@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get 'health_check_pages/index'
+  get 'health_check_pages/no_cooking'
+
   resources :stage_common_options
   resources :rentable_items
   resources :stocker_items
