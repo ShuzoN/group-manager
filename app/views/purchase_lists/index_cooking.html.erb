@@ -31,7 +31,7 @@
   </tbody>
 </table>
 
-<% fes_dates = FesDate.all %>
+<% fes_dates = FesYear.where(fes_year:Time.now.year).first().fes_date.all%>
 
 <p>
 <% fes_dates.each do |fesdate| %>
