@@ -3,13 +3,11 @@ class HealthCheckPagesController < ApplicationController
   def index
     # 今年のレコード
     this_year = FesYear.where(fes_year: Time.now.year).first()
-    # 自分の所有するグループで今年に紐づくもの
-    @food_products = FoodProduct.where(is_cooking: true).joins(
-        {:group => :fes_year}).where({
-            :fes_years => { :id => this_year.id}})
+
+    @food_products = FoodProduct.where(is_cooking: true).joins({group: :fes_year})
+        .where(fes_years: {id: this_year.id})
 
     @fes_dates = this_year.fes_date.all()
-    # ログインユーザの所有しているグループのうち，
     respond_to do |format|
       format.pdf do
         # 詳細画面のHTMLを取得
@@ -31,9 +29,8 @@ class HealthCheckPagesController < ApplicationController
   end
 
   def no_cooking
-    # 今年のレコード
     this_year = FesYear.where(fes_year: Time.now.year).first()
-    # 自分の所有するグループで今年に紐づくもの
+
     @food_products = FoodProduct.where(is_cooking: false).joins(
         {:group => :fes_year}).where({
             :fes_years => { :id => this_year.id}})
