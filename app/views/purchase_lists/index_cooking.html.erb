@@ -34,14 +34,14 @@
 <% fes_dates = FesYear.where(fes_year:Time.now.year).first().fes_date.all%>
 
 <p>
-<% fes_dates.each do |fesdate| %>
+<% @fes_dates.each do |fesdate| %>
   <%= show_new_fresh(fesdate) %>
 <% end %>
 <%= render :partial => 'warnign_fresh' %>
 </p>
 
 <p>
-<% fes_dates.each do |fesdate| %>
+<% @fes_dates.each do |fesdate| %>
   <%= show_new_nonfresh(fesdate) %>
 <% end %>
 <%= render :partial => 'warnign_preserved' %>
