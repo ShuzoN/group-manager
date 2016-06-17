@@ -1,47 +1,23 @@
 class HealthCheckPagesController < ApplicationController
 
   def index
-    # 今年のレコード
-    this_year = FesYear.where(fes_year: Time.now.year).first()
+    @food_products = FoodProduct.this_year_cooking
+    @fes_dates = FesYear.this_year.fes_date.all()
 
-    @food_products = FoodProduct.where(is_cooking: true).joins({group: :fes_year})
-        .where(fes_years: {id: this_year.id})
-
-    @fes_dates = this_year.fes_date.all()
-    respond_to do |format|
-      format.pdf do
-        # 詳細画面のHTMLを取得
-        html = render_to_string template: "health_check_pages/index"
-
-        # PDFKitを作成
-        pdf = PDFKit.new(html, encoding: "UTF-8")
-
-        # 画面にPDFを表示する
-        # to_pdfメソッドでPDFファイルに変換する
-        # 他には、to_fileメソッドでPDFファイルを作成できる
-        # disposition: "inline" によりPDFはダウンロードではなく画面に表示される
-        send_data pdf.to_pdf,
-          filename:    "#health_check_all.pdf",
-          type:        "application/pdf",
-          disposition: "inline"
-      end   # 副代表が登録されていない団体数を取得する
-    end
+    preview_pdf_page("index", "")
   end
 
   def no_cooking
-    this_year = FesYear.where(fes_year: Time.now.year).first()
+    @food_products = FoodProduct.this_year_non_cooking
+    @fes_dates = FesYear.this_year.fes_date.all()
+    preview_pdf_page("no_cooking", "_no_cooking")
+  end
 
-    @food_products = FoodProduct.where(is_cooking: false).joins(
-        {:group => :fes_year}).where({
-            :fes_years => { :id => this_year.id}})
-    @fes_dates = this_year.fes_date.all()
-
-    # ログインユーザの所有しているグループのうち，
-    # 副代表が登録されていない団体数を取得する
+  def preview_pdf_page(html_page_name, output_file_name)
     respond_to do |format|
       format.pdf do
         # 詳細画面のHTMLを取得
-        html = render_to_string template: "health_check_pages/no_cooking"
+        html = render_to_string template: "health_check_pages/" + html_page_name
 
         # PDFKitを作成
         pdf = PDFKit.new(html, encoding: "UTF-8")
@@ -51,7 +27,7 @@ class HealthCheckPagesController < ApplicationController
         # 他には、to_fileメソッドでPDFファイルを作成できる
         # disposition: "inline" によりPDFはダウンロードではなく画面に表示される
         send_data pdf.to_pdf,
-          filename:    "#health_check_all_no_cooking.pdf",
+          filename:    "#health_check_all#{output_file_name}.pdf",
           type:        "application/pdf",
           disposition: "inline"
       end   # 副代表が登録されていない団体数を取得する

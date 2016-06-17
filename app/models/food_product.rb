@@ -24,4 +24,9 @@ class FoodProduct < ActiveRecord::Base
   # 調理なしを検索するスコープ
   scope :non_cooking, -> {where( is_cooking: 'false' )}
 
+  # 今年度 かつ 調理ありを検索するスコープ
+  scope :this_year_cooking, -> {cooking.joins(:group => :fes_year).merge(Group.this_year_groups)}
+  # 今年度 かつ 調理なしを検索するスコープ
+  scope :this_year_non_cooking, -> {non_cooking.joins(:group => :fes_year).merge(Group.this_year_groups)}
+
 end

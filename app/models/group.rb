@@ -3,6 +3,7 @@ class Group < ActiveRecord::Base
   belongs_to :user
   belongs_to :fes_year
   has_many :sub_reps
+  has_many :food_products
 
   validates :name, presence: true, uniqueness: { scope: :fes_year }
   validates :user, presence: true
@@ -63,4 +64,9 @@ class Group < ActiveRecord::Base
     # 副代表が登録済みの団体を返す
     return Group.joins(:sub_reps).where(user_id: user_id)
   end
+
+  def self.this_year_groups
+    return Group.where(fes_years: {id: FesYear.this_year.id})
+  end
 end
+
